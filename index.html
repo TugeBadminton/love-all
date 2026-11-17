@@ -334,7 +334,12 @@ input[type=range]{width:100%;accent-color:var(--court);padding:0;border:0}
 
 /* Free layout: per-element moves, sizes and hides chosen by the owner in edit mode */
 .lock span,.tile span,.names span,.announce-names span,.announce-names em,.sign span{display:inline-block}
-.ed-bar textarea{font:inherit;font-size:16px;line-height:1.4;padding:8px 10px;border:1px solid #9bb0a4;border-radius:8px;width:100%;min-height:58px;resize:vertical;background:#fff;color:var(--ink)}
+.map-link{display:inline-flex;align-items:center;gap:10px;margin-top:18px;padding:5px 18px 5px 5px;border:1.5px solid var(--gold);border-radius:999px;background:#fff6e2;color:var(--court-deep);text-decoration:none;font-weight:600;font-size:.9rem;line-height:1.3;max-width:100%}
+.map-link:hover{background:#fdebc6}
+.map-ic{width:40px;height:40px;border-radius:50%;background:var(--court);color:var(--gold);display:flex;align-items:center;justify-content:center;flex:none}
+.map-ic svg{width:23px;height:23px}
+.map-link.is-empty{opacity:.65;border-style:dashed}
+.ed-bar input[type=url],.ed-bar textarea{font:inherit;font-size:16px;line-height:1.4;padding:8px 10px;border:1px solid #9bb0a4;border-radius:8px;width:100%;min-height:58px;resize:vertical;background:#fff;color:var(--ink)}
 body:not(.editing) .ed-hide{display:none !important}
 body.editing .card{user-select:none;-webkit-user-select:none}
 body.editing .card img{pointer-events:none;-webkit-user-drag:none}
@@ -406,17 +411,21 @@ body.editing .ed-sec-sel{outline-color:#ffd34d}
 .cover .names{margin-top:24px}
 .fam{padding:22px 8px}
 .fam p:not(.eyebrow):not(.home){white-space:nowrap}
-/* Computer screens: the colour bands run edge to edge, the content stays in a centred column the width of a large phone */
-@media (min-width:700px){
-  .card{max-width:none;box-shadow:none}
-  .card>header,.card>section,.card>footer{padding-left:max(24px,calc(50% - 280px));padding-right:max(24px,calc(50% - 280px))}
-  .cover::before,.cover::after{left:max(14px,calc(50% - 300px));right:max(14px,calc(50% - 300px))}
+/* Computer screens: the whole phone layout is enlarged as one piece (600px drawn at 1.2x, then 1.5x = 900px wide), so text, photos and ornaments grow together. Edit mode stays at 1x so dragging follows the pointer. */
+@media (min-width:760px){
+  .card{max-width:600px;zoom:1.2}
+  .gate-in{zoom:1.2}
 }
+@media (min-width:1000px) and (min-height:600px){
+  .card{zoom:1.5}
+  .gate-in{zoom:1.4}
+}
+body.editing .card{zoom:1}
 </style>
 </head>
 <body>
 <div id="app"></div>
-<script type="application/json" id="state">{"rev":4,"groom":"Thanh Tùng","bride":"Phương Anh","message":"Trân trọng kính mời bạn đến chung vui cùng gia đình chúng tôi trong ngày trọng đại.","sides":{"trai":{"father":"Vũ Đình Thu","mother":"Mai Thị Hà","home":"Quê quán nhà trai","eventTitle":"Lễ Thành Hôn","date":"2026-12-20","time":"11:00","lunar":"","venue":"Tên nhà hàng hoặc tư gia nhà trai","address":"Địa chỉ tổ chức bên nhà trai","map":""},"gai":{"father":"Nguyễn Đức Hạnh","mother":"Tạ Thị Hằng","home":"Quê quán nhà gái","eventTitle":"Lễ Vu Quy","date":"2026-12-20","time":"11:00","lunar":"","venue":"Tên nhà hàng hoặc tư gia nhà gái","address":"Địa chỉ tổ chức bên nhà gái","map":""}},"music":{"start":20},"gifts":{"groom":{"qr":"","bank":"","holder":""},"bride":{"qr":"","bank":"","holder":""}},"edits":{"els":{"cover:5:0":{"y":-3.08},"cover:4:1":{"y":-6.73},"cover:7:0":{"y":-9.81},"families:9:0":{"y":-5.19},"families:13:0":{"y":-5.77},"families:16:0":{"y":-6.35},"families:17:0":{"y":-5.19},"families:20:0":{"y":-4.81},"families:21:0":{"y":-9.42},"events-gai:29:0":{"y":-3.46},"events-trai:29:0":{"y":-3.65},"score:13:0":{"y":-6.15},"score:34:0":{"y":-8.08},"score:35:0":{"y":-9.04},"album:12:0":{"y":-4.04},"album:13:0":{"y":-6.92},"album:37:0":{"y":-6.73},"album:38:0":{"y":-5.58},"wish:12:0":{"y":-4.81},"wish:10:0":{"y":3.27},"wish:13:0":{"y":-4.42},"wish:39:0":{"y":-4.04},"wish:41:0":{"y":-4.04},"wish:42:0":{"y":-5},"gift:12:0":{"y":-5},"gift:13:0":{"y":-6.15},"gift:39:0":{"y":-7.31},"gift:46:0":{"y":-6.03},"gift:46:1":{"y":-6.27},"thanks:12:0":{"y":-4.43},"thanks:49:0":{"y":-7.12},"thanks:48:0":{"y":-5.19}},"secs":{"cover":{"pb":-7.31},"families":{"pb":-8.08},"events":{"pb":1.15},"score":{"pb":-8.08},"album":{"pb":-4.23},"wish":{"pb":-8.08},"gift":{"pb":-8.08},"thanks":{"pb":-3.46}}},"photos":[{"src":"img/01.jpg","ar":0.6667,"x":50,"y":20,"z":1},{"src":"img/02.jpg","ar":0.6667,"x":50,"y":30,"z":1},{"src":"img/03.jpg","ar":0.6667,"x":50,"y":30,"z":1},{"src":"img/04.jpg","ar":0.6667,"x":50,"y":30,"z":1}]}</script>
+<script type="application/json" id="state">{"rev":4,"groom":"Thanh Tùng","bride":"Phương Anh","message":"Trân trọng kính mời bạn đến chung vui cùng gia đình chúng tôi trong ngày trọng đại.","sides":{"trai":{"father":"Vũ Đình Thu","mother":"Mai Thị Hà","home":"Quê quán nhà trai","eventTitle":"Lễ Thành Hôn","date":"2026-12-20","time":"11:00","lunar":"","venue":"Tên nhà hàng hoặc tư gia nhà trai","address":"Địa chỉ tổ chức bên nhà trai","map":"https://maps.app.goo.gl/sStJ2evRLehPvw63A"},"gai":{"father":"Nguyễn Đức Hạnh","mother":"Tạ Thị Hằng","home":"Quê quán nhà gái","eventTitle":"Lễ Vu Quy","date":"2026-12-20","time":"11:00","lunar":"","venue":"Tên nhà hàng hoặc tư gia nhà gái","address":"Địa chỉ tổ chức bên nhà gái","map":"https://maps.app.goo.gl/sStJ2evRLehPvw63A"}},"music":{"start":20},"gifts":{"groom":{"qr":"","bank":"","holder":""},"bride":{"qr":"","bank":"","holder":""}},"edits":{"els":{"cover:5:0":{"y":-3.08},"cover:4:1":{"y":-6.73},"cover:7:0":{"y":-9.81},"families:9:0":{"y":-5.19},"families:13:0":{"y":-5.77},"families:16:0":{"y":-6.35},"families:17:0":{"y":-5.19},"families:20:0":{"y":-4.81},"families:21:0":{"y":-9.42},"events-gai:29:0":{"y":-3.46},"events-trai:29:0":{"y":-3.65},"score:13:0":{"y":-6.15},"score:34:0":{"y":-8.08},"score:35:0":{"y":-9.04},"album:12:0":{"y":-4.04},"album:13:0":{"y":-6.92},"album:37:0":{"y":-6.73},"album:38:0":{"y":-5.58},"wish:12:0":{"y":-4.81},"wish:10:0":{"y":3.27},"wish:13:0":{"y":-4.42},"wish:39:0":{"y":-4.04},"wish:41:0":{"y":-4.04},"wish:42:0":{"y":-5},"gift:12:0":{"y":-5},"gift:13:0":{"y":-6.15},"gift:39:0":{"y":-7.31},"gift:46:0":{"y":-6.03},"gift:46:1":{"y":-6.27},"thanks:12:0":{"y":-4.43},"thanks:49:0":{"y":-7.12},"thanks:48:0":{"y":-5.19}},"secs":{"cover":{"pb":-7.31},"families":{"pb":-8.08},"events":{"pb":1.15},"score":{"pb":-8.08},"album":{"pb":-4.23},"wish":{"pb":-8.08},"gift":{"pb":-8.08},"thanks":{"pb":-3.46}}},"photos":[{"src":"img/01.jpg","ar":0.6667,"x":50,"y":20,"z":1},{"src":"img/02.jpg","ar":0.6667,"x":50,"y":30,"z":1},{"src":"img/03.jpg","ar":0.6667,"x":50,"y":30,"z":1},{"src":"img/04.jpg","ar":0.6667,"x":50,"y":30,"z":1}]}</script>
 <script id="appjs">
 (function(){
 "use strict";
@@ -476,8 +485,10 @@ var ATOMS=[
   [".tile span",1],[".board",0],[".score-note",0],
   [".grid button",0],[".grid",0],[".hint",1],[".lead",1],[".lock span",1],[".lock",0],["#wish-box",0],
   [".env-label b",1],[".env-label i",1],[".env .cta",1],[".env",0],
-  [".sign span",1],[".sign",0],[".thanks p",1]
+  [".sign span",1],[".sign",0],[".thanks p",1],
+  [".map-link",0]
 ];
+var HOUSE_PIN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 9.5V20h14V9.5"/><path d="M12 17.5s-3-2.7-3-4.7a3 3 0 0 1 6 0c0 2-3 4.7-3 4.7z"/><circle cx="12" cy="12.8" r=".9" fill="currentColor"/></svg>';
 var PEN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4zM13.5 6.5l4 4"/></svg>';
 var SEC_NAME={cover:"Bìa",families:"Báo tin",events:"Lịch cưới",score:"Đếm ngược",album:"Album",wish:"Lời chúc",gift:"Mừng cưới",thanks:"Lời cảm ơn"};
 var RESET=":root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px/1.5 system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}";
@@ -527,7 +538,9 @@ function eventCard(key,main){
     +'<h3 data-b="sides.'+key+'.eventTitle">'+esc(s.eventTitle)+'</h3>'+dateHtml
     +(s.lunar?'<p class="lunar" data-b="sides.'+key+'.lunar">'+esc(s.lunar)+'</p>':'')
     +'<p class="venue" data-b="sides.'+key+'.venue">'+esc(s.venue)+'</p><p class="addr" data-b="sides.'+key+'.address">'+esc(s.address)+'</p>'
-    +'<div class="event-actions">'+(url?'<a class="btn" href="'+esc(url)+'" target="_blank" rel="noopener">Chỉ đường</a>':'')
+    +(url?'<a class="map-link" href="'+esc(url)+'" target="_blank" rel="noopener"><span class="map-ic">'+HOUSE_PIN+'</span><span>Chỉ đường đến '+SIDE_NAME[key].toLowerCase()+'</span></a>'
+      :(ed.on?'<span class="map-link is-empty"><span class="map-ic">'+HOUSE_PIN+'</span><span>Chạm để thêm link bản đồ</span></span>':''))
+    +'<div class="event-actions">'
     +'<button type="button" class="btn ghost" data-rsvp="'+key+'">Xác nhận tham dự</button>'+'</div>'
     +'</article>';
 }
@@ -1106,7 +1119,9 @@ function autoStep(ts){
   if(autoLast&&!overlayOpen()){
     autoOff+=Math.min(64,ts-autoLast)/1000*AUTO_SPEED;
     var mx=autoMax(); if(autoOff>=mx){autoOff=mx;autoStop();return;}
-    var c=app.querySelector(".card"); if(c) c.style.transform="translate3d(0,"+(-autoOff).toFixed(2)+"px,0)";
+    // autoOff is in screen pixels; a zoomed card draws its own transform larger, so divide by the zoom.
+    var c=app.querySelector(".card"), z=c?parseFloat(getComputedStyle(c).zoom)||1:1;
+    if(c) c.style.transform="translate3d(0,"+(-autoOff/z).toFixed(3)+"px,0)";
   }
   autoLast=ts; autoRaf=requestAnimationFrame(autoStep);
 }
@@ -1320,6 +1335,14 @@ function edPanel(){
     h='<div class="ed-row"><span class="ed-title">'+(isText?'Dòng chữ':'Khối hoặc biểu tượng')+'</span>'
       +(up?'<button type="button" class="ed-b" id="ed-up">Chọn khối chứa</button>':'')+none+'</div>'
       +(isText?'<textarea id="ed-text" rows="2" maxlength="600" aria-label="Nội dung dòng chữ">'+esc(edText(el))+'</textarea>':'')
+      +(function(){
+        // Anything inside a ceremony card can set that side's Google Maps link.
+        var ev=el.closest(".event[data-side]"); if(!ev) return "";
+        var sd=ev.getAttribute("data-side")==="trai"?"trai":"gai";
+        return '<label class="ed-lbl" for="ed-map">Link Google Maps '+SIDE_NAME[sd].toLowerCase()+'</label>'
+          +'<input type="url" id="ed-map" data-side="'+sd+'" inputmode="url" placeholder="https://maps.app.goo.gl/..." value="'+esc(state.sides[sd].map)+'">'
+          +'<p class="ed-note" id="ed-map-note">Dán link rồi bấm ra ngoài ô. Để trống thì nút bản đồ ẩn với khách.</p>';
+      })()
       +'<div class="ed-row"><span class="ed-lbl">Cỡ</span>'+edStep("data-eds","-1","Thu nhỏ","−")+'<span class="ed-val" id="ed-sv"></span>'+edStep("data-eds","1","Phóng to","+")
       +'<span class="ed-sep"></span><span class="ed-lbl">Dịch</span>'+edStep("data-edm","l","Sang trái","←")+edStep("data-edm","u","Lên trên","↑")+edStep("data-edm","d","Xuống dưới","↓")+edStep("data-edm","r","Sang phải","→")+'</div>'
       +'<div class="ed-row"><button type="button" class="ed-b" id="ed-hide"></button><button type="button" class="ed-b" id="ed-reset">Đặt lại</button></div>';
@@ -1473,7 +1496,16 @@ document.addEventListener("input",function(e){
   else{var v=edV(ed.sel.key); if(val.trim()) v.t=val; else{delete v.t;ed.rerender=true;}}
   el.textContent=val; el.style.whiteSpace="pre-line"; edTouch();
 });
-document.addEventListener("change",function(e){if(ed.on&&e.target.id==="ed-text") edFlush();});
+document.addEventListener("change",function(e){
+  if(!ed.on) return;
+  if(e.target.id==="ed-text"){edFlush();return;}
+  if(e.target.id==="ed-map"){
+    var sd=e.target.getAttribute("data-side"), raw=e.target.value.trim(), url=safeUrl(raw);
+    if(raw&&!url){var n=document.getElementById("ed-map-note");if(n) n.textContent="Link cần bắt đầu bằng https:// (mở Google Maps, bấm Chia sẻ, Sao chép đường liên kết).";return;}
+    if(url===state.sides[sd].map) return;
+    edSnap(); state.sides[sd].map=url; ed.rerender=true; edFlush(); edPanel();
+  }
+});
 document.addEventListener("keydown",function(e){
   if(!ed.on) return;
   var tag=e.target&&e.target.tagName;
