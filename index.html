@@ -404,6 +404,14 @@ body.editing .ed-sel{outline-color:#ffd34d !important;box-shadow:0 0 0 3px rgba(
 body.editing .ed-sec-sel{outline-color:#ffd34d}
 .ed-h{background:var(--gold);color:#3a0a10}
 .cover .names{margin-top:24px}
+.fam{padding:22px 8px}
+.fam p:not(.eyebrow):not(.home){white-space:nowrap}
+/* Computer screens: the colour bands run edge to edge, the content stays in a centred column the width of a large phone */
+@media (min-width:700px){
+  .card{max-width:none;box-shadow:none}
+  .card>header,.card>section,.card>footer{padding-left:max(24px,calc(50% - 280px));padding-right:max(24px,calc(50% - 280px))}
+  .cover::before,.cover::after{left:max(14px,calc(50% - 300px));right:max(14px,calc(50% - 300px))}
+}
 </style>
 </head>
 <body>
@@ -1084,25 +1092,38 @@ document.addEventListener("visibilitychange",function(){
 });
 
 /* Gentle auto-scroll: stops as soon as the guest scrolls or taps */
-var autoOn=false, autoRaf=0, autoLast=0, autoPos=0, AUTO_SPEED=38;
+// Whole-pixel scrollBy steps unevenly (one pixel on some frames, none on others), which reads as judder.
+// So the card glides on a GPU transform with sub-pixel offsets, and the real scroll position is set once when it stops.
+var autoOn=false, autoRaf=0, autoLast=0, autoBase=0, autoOff=0, AUTO_SPEED=38;
 function overlayOpen(){return document.body.style.overflow==="hidden";}
 function paintAuto(){
   var b=document.getElementById("fab-auto"); if(!b) return;
   b.setAttribute("aria-pressed",autoOn?"true":"false"); b.setAttribute("aria-label",autoOn?"Dừng tự cuộn":"Tự cuộn thiệp");
 }
+function autoMax(){var root=document.scrollingElement||document.documentElement;return Math.max(0,root.scrollHeight-window.innerHeight-autoBase);}
 function autoStep(ts){
   if(!autoOn) return;
-  var root=document.scrollingElement||document.documentElement;
   if(autoLast&&!overlayOpen()){
-    autoPos+=Math.min(64,ts-autoLast)/1000*AUTO_SPEED;
-    var whole=Math.floor(autoPos);
-    if(whole>=1){autoPos-=whole;window.scrollBy(0,whole);}
-    if(root.scrollTop+window.innerHeight>=root.scrollHeight-2){autoStop();return;}
+    autoOff+=Math.min(64,ts-autoLast)/1000*AUTO_SPEED;
+    var mx=autoMax(); if(autoOff>=mx){autoOff=mx;autoStop();return;}
+    var c=app.querySelector(".card"); if(c) c.style.transform="translate3d(0,"+(-autoOff).toFixed(2)+"px,0)";
   }
   autoLast=ts; autoRaf=requestAnimationFrame(autoStep);
 }
-function autoStart(){if(autoOn) return;autoOn=true;autoLast=0;autoPos=0;paintAuto();autoRaf=requestAnimationFrame(autoStep);}
-function autoStop(){autoOn=false;cancelAnimationFrame(autoRaf);paintAuto();}
+function autoStart(){
+  if(autoOn) return;
+  autoOn=true; autoLast=0; autoOff=0; autoBase=window.scrollY||0;
+  var c=app.querySelector(".card"); if(c) c.style.willChange="transform";
+  paintAuto(); autoRaf=requestAnimationFrame(autoStep);
+}
+function autoStop(){
+  if(!autoOn){paintAuto();return;}
+  autoOn=false; cancelAnimationFrame(autoRaf);
+  var c=app.querySelector(".card"), y=(window.scrollY||0)+autoOff;
+  if(c){c.style.transform="";c.style.willChange="";}
+  autoOff=0; window.scrollTo(0,Math.round(y)); paintAuto();
+}
+window.addEventListener("scroll",function(){if(autoOn&&Math.abs((window.scrollY||0)-autoBase)>1) autoStop();},{passive:true});
 ["wheel","touchstart","keydown"].forEach(function(ev){
   window.addEventListener(ev,function(e){
     if(!autoOn) return;
@@ -1190,7 +1211,7 @@ function assignKeys(card){
 }
 function applyEdits(E){
   var card=app.querySelector(".card"); if(!card) return;
-  var u=card.clientWidth/100||5; E=E||{els:{},secs:{}};
+  var u=Math.min(card.clientWidth,520)/100||5; E=E||{els:{},secs:{}};
   assignKeys(card);
   [].forEach.call(card.querySelectorAll("[data-ek]"),function(el){
     var v=E.els[el.getAttribute("data-ek")], st=el.style, isText=el.hasAttribute("data-et");
@@ -1209,6 +1230,11 @@ function applyEdits(E){
       }
     }
   });
+  // Parents' names stay on one line: a name wider than its column shrinks just enough to fit.
+  [].forEach.call(card.querySelectorAll(".fam p:not(.eyebrow):not(.home)"),function(p){
+    var w=p.clientWidth, s=p.scrollWidth;
+    if(w&&s>w) p.style.fontSize=r2(parseFloat(getComputedStyle(p).fontSize)*w/s*0.97)+"px";
+  });
   [].forEach.call(card.children,function(sec){
     var n=sec.getAttribute("data-sec"); if(!n) return;
     sec.style.paddingTop=""; sec.style.paddingBottom="";
@@ -1219,10 +1245,12 @@ function applyEdits(E){
   });
 }
 window.addEventListener("resize",function(){applyEdits(state.edits);});
+if(document.fonts&&document.fonts.ready) document.fonts.ready.then(function(){applyEdits(state.edits);});
 
 /* Edit mode */
 var ed={on:false,sel:null,orig:"",undo:[],drag:null,dirty:false,rerender:false,textSnap:false,exitAsk:false,justDragged:false};
-function edU(){var c=app.querySelector(".card");return (c&&c.clientWidth/100)||5;}
+// Moves are stored in hundredths of the content width (capped at 520px) so they look the same on a phone and on a wide screen.
+function edU(){var c=app.querySelector(".card");return (c&&Math.min(c.clientWidth,520)/100)||5;}
 function edSnapData(){return JSON.stringify({groom:state.groom,bride:state.bride,message:state.message,sides:state.sides,edits:state.edits});}
 function edRestore(json){var d=JSON.parse(json);state.groom=d.groom;state.bride=d.bride;state.message=d.message;state.sides=d.sides;state.edits=cleanEdits(d.edits);}
 function edStatus(msg){var e=document.getElementById("ed-status");if(e){e.textContent=msg;e.hidden=!msg;}}
